@@ -1,20 +1,25 @@
-import Routes from "./Routes";
-import "./App.css";
-import Text from "./components/Text";
-import EnhancedTable from "./components/Table";
-import Dialog from "./components/Dialog";
-import React from "react";
-import axios from "axios";
-import { Outlet } from "react-router-dom";
+import React, { useState, useEffect } from 'react'
+import Routes from './Routes'
+import './App.css'
+import { Outlet } from 'react-router-dom'
+import axios from 'axios'
 
-function App() {
-  const [tableRows, setTableRows] = React.useState([]);
-  const [pokemonTypesOptions, setPokemonTypesOptions] = React.useState([]);
+const App = () => {
+  const [tableRows, setTableRows] = useState([])
+  const [pokemonTypesOptions] = useState([])
 
-  const handleUpdatePokemonRow = ({ id_pokemon, fields }) => {
-    const { my_name, my_description, my_types, my_teammates, my_sprite } =
-      fields;
-  };
+  // aqui va la consulta de axios
+  useEffect(() => {
+    axios.get('https://pokeapi.co/api/v2/pokemon?limit=100000&offset=0')
+      .then(({ data: { results } }) => {
+        setTableRows(results)
+      })
+  }, [])
+
+  const handleUpdatePokemonRow = ({ idPokemon, fields }) => {
+    // const { my_name, my_description, my_types, my_teammates, my_sprite } =
+    //   fields;
+  }
 
   return (
     <div className="App">
@@ -25,7 +30,7 @@ function App() {
       />
       <Outlet />
     </div>
-  );
+  )
 }
 
-export default App;
+export default App

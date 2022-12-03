@@ -1,14 +1,12 @@
-import React from "react";
-import EnhancedTable from "../components/Table";
-import { useNavigate } from "react-router-dom";
+import React from 'react'
+import EnhancedTable from '../components/Table/Table'
+import { useNavigate } from 'react-router-dom'
 
-export default function Home(props) {
-  const { tableRows } = props;
+const Home = ({ tableRows }) => {
+  const navigate = useNavigate()
 
-  const navigate = useNavigate();
-
-  const handleEditButton = (row) => (e) => {
-    e.stopPropagation();
+  const handleEditButton = (row) => (event) => {
+    event.stopPropagation()
     const {
       html_image,
       html_types,
@@ -16,23 +14,27 @@ export default function Home(props) {
       html_my_types,
       html_my_teammates,
       ...params
-    } = row;
+    } = row
     // ! NAVIGATE NOT ACCEPT HTML PARAMS
     navigate(`form/${row.name}`, {
-      state: { ...params },
-    });
-  };
+      state: { ...params }
+    })
+  }
 
   return (
     <div>
-      {tableRows.length > 0 ? (
+      {tableRows.length > 0
+        ? (
         <EnhancedTable
           rowsProp={tableRows}
           handleEditButton={handleEditButton}
         />
-      ) : (
-        "Loading..."
-      )}
+          )
+        : (
+            'Loading...'
+          )}
     </div>
-  );
+  )
 }
+
+export default Home

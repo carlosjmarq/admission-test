@@ -1,12 +1,10 @@
-import React, { useEffect } from "react";
+import React from 'react'
 
-import Home from "./containers/Home";
-import Form from "./containers/Form";
-import { Route, Routes, Outlet } from "react-router-dom";
+import Home from './containers/Home'
+import Form from './containers/Form'
+import { Route, Routes } from 'react-router-dom'
 
-export default function MyRoutes(props) {
-  const { tableRows, pokemonTypesOptions, handleUpdatePokemonRow } = props;
-
+const MyRoutes = ({ tableRows, pokemonTypesOptions, handleUpdatePokemonRow }) => {
   return (
     <div>
       <Routes>
@@ -30,5 +28,7 @@ export default function MyRoutes(props) {
         </Route>
       </Routes>
     </div>
-  );
+  )
 }
+
+export default MyRoutes
