@@ -1,5 +1,6 @@
 import React from 'react'
 import { Checkbox, TableCell, TableRow } from '@mui/material'
+import './PokemonRow.css'
 
 export const PokemonRow = ({ row, index, selected, setSelected, handleEditButton }) => {
   const isSelected = (name) => selected.indexOf(name) !== -1
@@ -44,7 +45,10 @@ export const PokemonRow = ({ row, index, selected, setSelected, handleEditButton
           <button onClick={handleEditButton(row)}>Edit</button>
         </TableCell>
       </TableCell>
-      <TableCell align="right">ABC</TableCell>
+      <TableCell className="image-cell" align="right">
+        <img className="pokemon-front-img" src={row.sprites.front_default}/>
+        <img className="pokemon-back-img" src={row.sprites.back_default}/>
+      </TableCell>
       <TableCell align="right">{row.id}</TableCell>
       <TableCell
         component="th"
@@ -54,7 +58,13 @@ export const PokemonRow = ({ row, index, selected, setSelected, handleEditButton
       >
         {row.name}
       </TableCell>
-      <TableCell align="right">{JSON.stringify(row.types)}</TableCell>
+      <TableCell align="right">
+        <ul>
+          {!!row.types && row.types.map(({ type }) => (
+            <li key={type.name}>{type.name}</li>
+          ))}
+        </ul>
+      </TableCell>
       <TableCell align="right">{'Amigo <3'}</TableCell>
       <TableCell align="right">{row.height}</TableCell>
       <TableCell align="right">{row.weight}</TableCell>

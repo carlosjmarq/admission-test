@@ -35,11 +35,11 @@ const headCells = [
   },
   {
     id: 'height',
-    label: 'Altura'
+    label: 'Altura [dm]'
   },
   {
     id: 'weight',
-    label: 'Peso'
+    label: 'Peso [hg]'
   },
   {
     id: 'description',

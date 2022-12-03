@@ -1,0 +1,16 @@
+.pokemon-front-img {
+  display: inline;
+}
+
+.pokemon-back-img {
+  display: none;
+}
+
+.image-cell:hover .pokemon-front-img {
+  display: none;
+}
+
+.image-cell:hover .pokemon-back-img {
+  display: inline;
+}
+
