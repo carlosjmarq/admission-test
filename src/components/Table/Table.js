@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Box from '@mui/material/Box'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
@@ -7,22 +7,22 @@ import TableContainer from '@mui/material/TableContainer'
 import TablePagination from '@mui/material/TablePagination'
 import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper'
-import Checkbox from '@mui/material/Checkbox'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import Switch from '@mui/material/Switch'
-import { defaultRows, getComparator, stableSort } from './TableHelpers'
-import { EnhancedTableToolbar } from './EnhanncedTableToolbar'
 import { EnhancedTableHead } from './EnhancedTableHead'
+import { EnhancedTableToolbar } from './EnhanncedTableToolbar'
+import { defaultRows, getComparator, stableSort } from './TableHelpers'
+import { PokemonRow } from './PokemonRow'
 
 export default function EnhancedTable (props) {
   const { rowsProp, handleEditButton } = props
-  const [rows] = React.useState(rowsProp || defaultRows)
-  const [order, setOrder] = React.useState('asc')
-  const [orderBy, setOrderBy] = React.useState('calories')
-  const [selected, setSelected] = React.useState([])
-  const [page, setPage] = React.useState(0)
-  const [dense, setDense] = React.useState(false)
-  const [rowsPerPage, setRowsPerPage] = React.useState(5)
+  const [rows] = useState(rowsProp || defaultRows)
+  const [order, setOrder] = useState('asc')
+  const [orderBy, setOrderBy] = useState('calories')
+  const [selected, setSelected] = useState([])
+  const [page, setPage] = useState(0)
+  const [dense, setDense] = useState(false)
+  const [rowsPerPage, setRowsPerPage] = useState(5)
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc'
@@ -39,28 +39,6 @@ export default function EnhancedTable (props) {
     setSelected([])
   }
 
-  // React.useEffect(() => {}, [JSON.stringify(rowsProp)]);
-
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name)
-    let newSelected = []
-
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name)
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1))
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1))
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1)
-      )
-    }
-
-    setSelected(newSelected)
-  }
-
   const handleChangePage = (event, newPage) => {
     setPage(newPage)
   }
@@ -73,8 +51,6 @@ export default function EnhancedTable (props) {
   const handleChangeDense = (event) => {
     setDense(event.target.checked)
   }
-
-  const isSelected = (name) => selected.indexOf(name) !== -1
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
@@ -103,44 +79,16 @@ export default function EnhancedTable (props) {
                  rows.slice().sort(getComparator(order, orderBy)) */}
               {stableSort(rows, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row, index) => {
-                  const isItemSelected = isSelected(row.name)
-                  const labelId = `enhanced-table-checkbox-${index}`
-
-                  return (
-                    <TableRow
-                      hover
-                      onClick={(event) => {
-                        handleClick(event, row.name)
-                      }}
-                      role="checkbox"
-                      aria-checked={isItemSelected}
-                      tabIndex={-1}
+                .map((row, index) => (
+                    <PokemonRow
                       key={row.name}
-                      selected={isItemSelected}
-                    >
-                      <TableCell padding="checkbox">
-                        <Checkbox color="primary" checked={isItemSelected} />
-                        <TableCell padding="checkbox">
-                          <button onClick={handleEditButton(row)}>Edit</button>
-                        </TableCell>
-                      </TableCell>
-
-                      <TableCell
-                        component="th"
-                        id={labelId}
-                        scope="row"
-                        padding="none"
-                      >
-                        {row.name}
-                      </TableCell>
-                      <TableCell align="right">{row.calories}</TableCell>
-                      <TableCell align="right">{row.fat}</TableCell>
-                      <TableCell align="right">{row.carbs}</TableCell>
-                      <TableCell align="right">{row.protein}</TableCell>
-                    </TableRow>
-                  )
-                })}
+                      row={row}
+                      index={index}
+                      selected={selected}
+                      setSelected={setSelected}
+                      handleEditButton={handleEditButton}
+                    />
+                ))}
               {emptyRows > 0 && (
                 <TableRow
                   style={{

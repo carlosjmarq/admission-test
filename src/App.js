@@ -8,11 +8,21 @@ const App = () => {
   const [tableRows, setTableRows] = useState([])
   const [pokemonTypesOptions] = useState([])
 
+  const getPokemon = async ({ url }) => {
+    const { data: { types, weight, height, id, name, sprites } } = await axios.get(url)
+    return { types, weight, height, id, name, sprites }
+  }
+
   // aqui va la consulta de axios
   useEffect(() => {
     axios.get('https://pokeapi.co/api/v2/pokemon?limit=100000&offset=0')
-      .then(({ data: { results } }) => {
-        setTableRows(results)
+      .then(async ({ data: { results } }) => {
+        const pokemons = []
+        for (const pokemonData of results) {
+          const pokemon = await getPokemon(pokemonData)
+          pokemons.push(pokemon)
+        }
+        setTableRows(pokemons)
       })
   }, [])
 

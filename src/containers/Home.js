@@ -8,11 +8,11 @@ const Home = ({ tableRows }) => {
   const handleEditButton = (row) => (event) => {
     event.stopPropagation()
     const {
-      html_image,
-      html_types,
-      html_my_sprite,
-      html_my_types,
-      html_my_teammates,
+      html_image: htmlImage,
+      html_types: htmlTypes,
+      html_my_sprite: htmlMySprite,
+      html_my_types: htmlMyTypes,
+      html_my_teammates: htmlMyTeammates,
       ...params
     } = row
     // ! NAVIGATE NOT ACCEPT HTML PARAMS
