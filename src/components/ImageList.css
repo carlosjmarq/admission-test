@@ -1,0 +1,11 @@
+.sprite {
+  border: 3px solid transparent
+}
+
+.sprite:hover {
+  background-color: #bbdefb;
+}
+
+.selectedSprite {
+  border: 3px solid #1565c0
+}

@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom'
 import { intersection, isEmpty } from 'lodash'
 import { Chip, MenuItem } from '@mui/material'
 import { Box } from '@mui/system'
+import { ImageList } from '../components/ImageList'
 
 // * use spritesTitles to set the titles to Images
 
@@ -27,6 +28,8 @@ const Form = ({ pokemonTypesOptions, tableRows, handleUpdatePokemonRow }) => {
   const [newTypes, setNewTypes] = useState([])
   const [newFriends, setNewFriends] = useState([])
   const [posibleFriends, setPosibleFriends] = useState([])
+  const [pokemonSprites, setPokemonSprites] = useState([])
+  const [selectedSprite, setSelectedSprite] = useState(null)
 
   // * Use navigate to return root path
   // const navigate = useNavigate();
@@ -49,10 +52,25 @@ const Form = ({ pokemonTypesOptions, tableRows, handleUpdatePokemonRow }) => {
     }))
   }, [newTypes, tableRows])
 
+  useEffect(() => {
+    if (!selectedPokemon || isEmpty(selectedPokemon)) return
+    const newSprites = []
+    const pokemonSprites = selectedPokemon.sprites
+    for (const sprite in pokemonSprites) {
+      if (!!pokemonSprites[sprite] && typeof pokemonSprites[sprite] === 'string') {
+        newSprites.push({
+          sprite: pokemonSprites[sprite],
+          title: sprite
+        })
+      }
+    }
+    setPokemonSprites(newSprites)
+  }, [selectedPokemon])
+
   const onSubmit = (e) => {
     e.stopPropagation()
     e.preventDefault()
-    console.log({ pokemonTypesOptions, posibleFriends, tableRows })
+    console.log({ pokemonTypesOptions, posibleFriends, tableRows, pokemonSprites, selectedSprite })
     // handleUpdatePokemonRow({});
   }
 
@@ -126,7 +144,11 @@ const Form = ({ pokemonTypesOptions, tableRows, handleUpdatePokemonRow }) => {
       disabled={isEmpty(posibleFriends)}
     />
 
-    {/* <ImageList defaultValue={selectedPokemon.my_sprite} /> */}
+    <ImageList
+      value={selectedSprite}
+      setValue={setSelectedSprite}
+      data={pokemonSprites}
+    />
 
     <button onSubmit={onSubmit}>Submit</button>
     <div onClick={onSubmit}>ABC</div>
