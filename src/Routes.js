@@ -10,10 +10,10 @@ const MyRoutes = ({ tableRows, pokemonTypesOptions, handleUpdatePokemonRow }) =>
       <Routes>
         <Route path="/">
           <Route index path="/" element={<Home tableRows={tableRows} />} />
-          <Route
+          {/* <Route
             path="home"
             element={<Form pokemonTypesOptions={pokemonTypesOptions} />}
-          />
+          /> */}
           <Route
             path="form/:pokemonName"
             element={

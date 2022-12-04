@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { Text } from '../components/Text'
-// import { Selector } from '../components/Select'
+import { Selector } from '../components/Select'
 import { useParams } from 'react-router-dom'
-import { isEmpty } from 'lodash'
+import { intersection, isEmpty } from 'lodash'
+import { Chip, MenuItem } from '@mui/material'
+import { Box } from '@mui/system'
 
 // * use spritesTitles to set the titles to Images
 
@@ -22,8 +24,9 @@ const Form = ({ pokemonTypesOptions, tableRows, handleUpdatePokemonRow }) => {
   const [selectedPokemon, setSelectedPokemon] = useState(null)
   const [newName, setNewName] = useState('')
   const [newDescription, setNewDescription] = useState('')
-  // const [newTypes, setTypes] = useState([])
-  // const [newFriends, setFriends] = useState([])
+  const [newTypes, setNewTypes] = useState([])
+  const [newFriends, setNewFriends] = useState([])
+  const [posibleFriends, setPosibleFriends] = useState([])
 
   // * Use navigate to return root path
   // const navigate = useNavigate();
@@ -35,13 +38,57 @@ const Form = ({ pokemonTypesOptions, tableRows, handleUpdatePokemonRow }) => {
     setSelectedPokemon(tableRows.find(pokemon => pokemon.name === pokemonName))
   }, [pokemonName, tableRows])
 
-  // const onSubmit = (e) => {
-  //   e.stopPropagation();
-  //   e.preventDefault();
-  //   handleUpdatePokemonRow({});
-  // };
+  useEffect(() => {
+    if (isEmpty(newTypes)) {
+      setPosibleFriends([])
+      return
+    }
+    setPosibleFriends(tableRows.filter(pokemon => {
+      const pokemonTypes = pokemon.types.map(({ type }) => type.name)
+      return !isEmpty(intersection(newTypes, pokemonTypes))
+    }))
+  }, [newTypes, tableRows])
 
-  console.log(selectedPokemon)
+  const onSubmit = (e) => {
+    e.stopPropagation()
+    e.preventDefault()
+    console.log({ pokemonTypesOptions, posibleFriends, tableRows })
+    // handleUpdatePokemonRow({});
+  }
+
+  const renderTypeTag = (type) => {
+    if (!type || isEmpty(type)) return (<></>)
+    return (
+      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+        {type.map((value) => (
+          <Chip key={value} label={value} color={'secondary'}/>
+        ))}
+      </Box>
+    )
+  }
+
+  const renderTypeListItem = (type) => {
+    if (!type || isEmpty(type)) return (<></>)
+    return (
+      <MenuItem
+        key={type?.name}
+        value={type?.name}
+        >
+        {type?.name}
+      </MenuItem>
+    )
+  }
+
+  const handleMultipleSelector = (event, setValue) => {
+    const { target: { value } } = event
+    // On autofill we get a stringified value.
+    setValue(typeof value === 'string' ? value.split(',') : value)
+  }
+
+  // const handleSimpleSelector = (event, setValue) => {
+  //   const { target: { value } } = event
+  //   setValue(value)
+  // }
 
   return (
     <form>
@@ -60,15 +107,29 @@ const Form = ({ pokemonTypesOptions, tableRows, handleUpdatePokemonRow }) => {
         rows={3}
       />
 
-    {/* <Selector label={'New type'} defaultValue={selectedPokemon?.types} />
     <Selector
-      label={'Best teammate'}
-      // defaultValue={selectedPokemon?.my_teammates}
-    /> */}
+      label={'Tipo'}
+      data={pokemonTypesOptions}
+      renderListItem={renderTypeListItem}
+      renderValue={renderTypeTag}
+      value={newTypes}
+      multiple
+      onChange={event => handleMultipleSelector(event, setNewTypes)}
+    />
+    <Selector
+      label={'Amigos'}
+      data={posibleFriends}
+      renderListItem={renderTypeListItem}
+      value={newFriends}
+      multiple
+      onChange={event => handleMultipleSelector(event, setNewFriends)}
+      disabled={isEmpty(posibleFriends)}
+    />
 
     {/* <ImageList defaultValue={selectedPokemon.my_sprite} /> */}
 
-    <button>Submit</button>
+    <button onSubmit={onSubmit}>Submit</button>
+    <div onClick={onSubmit}>ABC</div>
   </form>
   )
 }

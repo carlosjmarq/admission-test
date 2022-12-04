@@ -6,14 +6,14 @@ import axios from 'axios'
 
 const App = () => {
   const [tableRows, setTableRows] = useState([])
-  const [pokemonTypesOptions] = useState([])
+  const [pokemonTypesOptions, setPokemonTypesOptions] = useState([])
 
   const getPokemon = async ({ url }) => {
     const { data: { types, weight, height, id, name, sprites } } = await axios.get(url)
     return { types, weight, height, id, name, sprites }
   }
 
-  // aqui va la consulta de axios
+  // * Consulta de los pokemon
   useEffect(() => {
     axios.get('https://pokeapi.co/api/v2/pokemon?limit=100000&offset=0')
       .then(async ({ data: { results } }) => {
@@ -23,6 +23,14 @@ const App = () => {
           pokemons.push(pokemon)
         }
         setTableRows(pokemons)
+      })
+  }, [])
+
+  // * Consulta de los tipos de pokemon
+  useEffect(() => {
+    axios.get('https://pokeapi.co/api/v2/type/')
+      .then(async ({ data: { results } }) => {
+        setPokemonTypesOptions(results)
       })
   }, [])
 
