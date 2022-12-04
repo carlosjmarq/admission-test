@@ -61,10 +61,10 @@ export const PokemonRow = ({ row, index, selected, setSelected, handleEditButton
       </TableCell>
       <TableCell align="right">{displayData.id}</TableCell>
       <TableCell
-        component="th"
+        // component="th"
         id={labelId}
-        scope="row"
-        padding="none"
+        // scope="row"
+        // padding="none"
       >
         {displayData.name}
       </TableCell>
@@ -75,7 +75,13 @@ export const PokemonRow = ({ row, index, selected, setSelected, handleEditButton
           ))}
         </ul>
       </TableCell>
-      <TableCell align="right">{'Amigo <3'}</TableCell>
+      <TableCell>
+        <ul>
+          {!!displayData.friends && displayData.friends.map(friend => (
+            <li key={friend}>{friend}</li>
+          ))}
+        </ul>
+      </TableCell>
       <TableCell align="right">{displayData.height}</TableCell>
       <TableCell align="right">{displayData.weight}</TableCell>
       <TableCell align="right">{displayData?.description}</TableCell>
