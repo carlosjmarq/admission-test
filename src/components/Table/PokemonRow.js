@@ -1,11 +1,21 @@
-import React from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { Checkbox, TableCell, TableRow } from '@mui/material'
 import './PokemonRow.css'
 
-export const PokemonRow = ({ row, index, selected, setSelected, handleEditButton }) => {
-  const isSelected = (name) => selected.indexOf(name) !== -1
+export const PokemonRow = ({ row, index, selected, setSelected, handleEditButton, catchedPokemon }) => {
+  const isSelected = useCallback((name) => selected.indexOf(name) !== -1, [selected])
   const isItemSelected = isSelected(row.name)
   const labelId = `enhanced-table-checkbox-${index}`
+
+  const [displayData, setDisplayData] = useState(row)
+
+  useEffect(() => {
+    if (!isSelected(row.name) || !catchedPokemon) {
+      setDisplayData(row)
+      return
+    }
+    setDisplayData(catchedPokemon)
+  }, [isSelected, catchedPokemon, row])
 
   const handleClick = (event, name) => {
     const selectedIndex = selected.indexOf(name)
@@ -36,39 +46,39 @@ export const PokemonRow = ({ row, index, selected, setSelected, handleEditButton
       role="checkbox"
       aria-checked={isItemSelected}
       tabIndex={-1}
-      key={row.name}
+      key={displayData.name}
       selected={isItemSelected}
     >
       <TableCell padding="checkbox">
         <Checkbox color="primary" checked={isItemSelected} />
         <TableCell padding="checkbox">
-          <button onClick={handleEditButton(row)}>Edit</button>
+          <button onClick={handleEditButton(displayData)}>Edit</button>
         </TableCell>
       </TableCell>
       <TableCell className="image-cell" align="right">
-        <img className="pokemon-front-img" src={row.sprites.front_default}/>
-        <img className="pokemon-back-img" src={row.sprites.back_default}/>
+        <img className="pokemon-front-img" src={displayData.sprites.front_default}/>
+        <img className="pokemon-back-img" src={displayData.sprites.back_default}/>
       </TableCell>
-      <TableCell align="right">{row.id}</TableCell>
+      <TableCell align="right">{displayData.id}</TableCell>
       <TableCell
         component="th"
         id={labelId}
         scope="row"
         padding="none"
       >
-        {row.name}
+        {displayData.name}
       </TableCell>
       <TableCell align="right">
         <ul>
-          {!!row.types && row.types.map(({ type }) => (
+          {!!displayData.types && displayData.types.map(({ type }) => (
             <li key={type.name}>{type.name}</li>
           ))}
         </ul>
       </TableCell>
       <TableCell align="right">{'Amigo <3'}</TableCell>
-      <TableCell align="right">{row.height}</TableCell>
-      <TableCell align="right">{row.weight}</TableCell>
-      <TableCell align="right">{row?.description}</TableCell>
+      <TableCell align="right">{displayData.height}</TableCell>
+      <TableCell align="right">{displayData.weight}</TableCell>
+      <TableCell align="right">{displayData?.description}</TableCell>
     </TableRow>
   )
 }

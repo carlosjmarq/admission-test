@@ -86,6 +86,7 @@ export default function EnhancedTable ({ rowsProp, handleEditButton, catchedPoke
                       selected={selected}
                       setSelected={setSelected}
                       handleEditButton={handleEditButton}
+                      catchedPokemon={catchedPokemon.find(pok => pok.id === row.id) ?? null}
                     />
                 ))}
               {emptyRows > 0 && (
