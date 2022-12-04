@@ -1,6 +1,8 @@
-import React from "react";
-import Text from "../components/Text";
-import Select from "../components/Select";
+import React, { useEffect, useState } from 'react'
+import { Text } from '../components/Text'
+// import { Selector } from '../components/Select'
+import { useParams } from 'react-router-dom'
+import { isEmpty } from 'lodash'
 
 // * use spritesTitles to set the titles to Images
 
@@ -15,14 +17,23 @@ import Select from "../components/Select";
 //   front_shiny_female: "Hembra frontal brillante",
 // };
 
-export default function Form(props) {
+const Form = ({ pokemonTypesOptions, tableRows, handleUpdatePokemonRow }) => {
   // const location = useLocation();
+  const [selectedPokemon, setSelectedPokemon] = useState(null)
+  const [newName, setNewName] = useState('')
+  const [newDescription, setNewDescription] = useState('')
+  // const [newTypes, setTypes] = useState([])
+  // const [newFriends, setFriends] = useState([])
+
   // * Use navigate to return root path
   // const navigate = useNavigate();
+  const { pokemonName } = useParams()
   // const { sprites, id_pokemon } = location.state;
 
-  const { foundPokemon } = props;
-  // const { foundPokemon, pokemonTypesOptions, tableRows, handleUpdatePokemonRow } = props;
+  useEffect(() => {
+    if (!pokemonName || isEmpty(tableRows)) return
+    setSelectedPokemon(tableRows.find(pokemon => pokemon.name === pokemonName))
+  }, [pokemonName, tableRows])
 
   // const onSubmit = (e) => {
   //   e.stopPropagation();
@@ -30,19 +41,36 @@ export default function Form(props) {
   //   handleUpdatePokemonRow({});
   // };
 
+  console.log(selectedPokemon)
+
   return (
     <form>
-      <Text label={"New name"} defaultValue={foundPokemon.my_name} />
-
-      <Select label={"New type"} defaultValue={foundPokemon.my_types} />
-      <Select
-        label={"Best teammate"}
-        defaultValue={foundPokemon.my_teammates}
+      <h1>¡Felicidades has atrapado un {selectedPokemon?.name}!</h1>
+      <h3>Cuentanos mas sobre tu nuevo pokemon</h3>
+      <Text
+        label={'Nombre'}
+        value={newName}
+        setValue={setNewName}
+      />
+      <Text
+        label={'Description'}
+        value={newDescription}
+        setValue={setNewDescription}
+        multiline={true}
+        rows={3}
       />
 
-      {/* <ImageList defaultValue={foundPokemon.my_sprite} /> */}
+    {/* <Selector label={'New type'} defaultValue={selectedPokemon?.types} />
+    <Selector
+      label={'Best teammate'}
+      // defaultValue={selectedPokemon?.my_teammates}
+    /> */}
 
-      <button>Submit</button>
-    </form>
-  );
+    {/* <ImageList defaultValue={selectedPokemon.my_sprite} /> */}
+
+    <button>Submit</button>
+  </form>
+  )
 }
+
+export default Form

@@ -7,17 +7,17 @@ const Home = ({ tableRows }) => {
 
   const handleEditButton = (row) => (event) => {
     event.stopPropagation()
-    const {
-      html_image: htmlImage,
-      html_types: htmlTypes,
-      html_my_sprite: htmlMySprite,
-      html_my_types: htmlMyTypes,
-      html_my_teammates: htmlMyTeammates,
-      ...params
-    } = row
+    // const {
+    //   htmlImage: ,
+    //   htmlTypes,
+    //   htmlMySprite,
+    //   htmlMyTypes,
+    //   htmlMyTeammates,
+    //   ...params
+    // } = row
     // ! NAVIGATE NOT ACCEPT HTML PARAMS
     navigate(`form/${row.name}`, {
-      state: { ...params }
+      // state: { ...params }
     })
   }
 

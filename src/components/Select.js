@@ -41,7 +41,7 @@ function getStyles (name, personName, theme) {
   }
 }
 
-export default function Selector () {
+export const Selector = ({ label, defultValue }) => {
   const theme = useTheme()
   const [personName, setPersonName] = React.useState([])
 

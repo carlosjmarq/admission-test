@@ -14,8 +14,7 @@ import { EnhancedTableToolbar } from './EnhanncedTableToolbar'
 import { defaultRows, getComparator, stableSort } from './TableHelpers'
 import { PokemonRow } from './PokemonRow'
 
-export default function EnhancedTable (props) {
-  const { rowsProp, handleEditButton } = props
+export default function EnhancedTable ({ rowsProp, handleEditButton }) {
   const [rows] = useState(rowsProp || defaultRows)
   const [order, setOrder] = useState('asc')
   const [orderBy, setOrderBy] = useState('calories')

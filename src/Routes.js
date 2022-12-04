@@ -15,7 +15,7 @@ const MyRoutes = ({ tableRows, pokemonTypesOptions, handleUpdatePokemonRow }) =>
             element={<Form pokemonTypesOptions={pokemonTypesOptions} />}
           />
           <Route
-            path="" // ? wich path?
+            path="form/:pokemonName"
             element={
               <Form
                 pokemonTypesOptions={pokemonTypesOptions}
