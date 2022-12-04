@@ -1,27 +1,16 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { Text } from '../components/Text'
 import { Selector } from '../components/Select'
-import { useParams } from 'react-router-dom'
-import { intersection, isEmpty } from 'lodash'
+import { useNavigate, useParams } from 'react-router-dom'
+import { clone, cloneDeep, intersection, isEmpty } from 'lodash'
 import { Chip, MenuItem } from '@mui/material'
 import { Box } from '@mui/system'
 import { ImageList } from '../components/ImageList'
+import { getCatchedPokemons, saveCatchedPokemon } from '../helpers/catchedPokemon'
 
 // * use spritesTitles to set the titles to Images
 
-// const spriteTitles = {
-//   back_default: "Macho posterior",
-//   back_female: "Hembra posterior",
-//   back_shiny: "Macho brillante posterior",
-//   back_shiny_female: "Hembra brillante posterior",
-//   front_default: "Macho frontal",
-//   front_female: "Hembra frontal",
-//   front_shiny: "Macho frontal brillante",
-//   front_shiny_female: "Hembra frontal brillante",
-// };
-
 const Form = ({ pokemonTypesOptions, tableRows, handleUpdatePokemonRow }) => {
-  // const location = useLocation();
   const [selectedPokemon, setSelectedPokemon] = useState(null)
   const [newName, setNewName] = useState('')
   const [newDescription, setNewDescription] = useState('')
@@ -32,9 +21,31 @@ const Form = ({ pokemonTypesOptions, tableRows, handleUpdatePokemonRow }) => {
   const [selectedSprite, setSelectedSprite] = useState(null)
 
   // * Use navigate to return root path
-  // const navigate = useNavigate();
+  const navigate = useNavigate()
   const { pokemonName } = useParams()
-  // const { sprites, id_pokemon } = location.state;
+
+  const getPokemonSprites = useCallback(() => {
+    const newSprites = []
+    const pokemonSprites = clone(selectedPokemon.sprites)
+    for (const sprite in pokemonSprites) {
+      if (!!pokemonSprites[sprite] && typeof pokemonSprites[sprite] === 'string') {
+        newSprites.push({
+          sprite: pokemonSprites[sprite],
+          title: sprite
+        })
+      }
+    }
+    setPokemonSprites(newSprites)
+    return newSprites
+  }, [selectedPokemon])
+
+  const updatePokemon = useCallback((pokemon, sprites) => {
+    setNewName(pokemon.name)
+    setNewDescription(pokemon.description)
+    setNewTypes(pokemon.types.map(({ type }) => type.name))
+    setNewFriends(pokemon.friends)
+    setSelectedSprite(sprites.find(({ sprite }) => sprite === pokemon.sprites.front_default).title)
+  }, [])
 
   useEffect(() => {
     if (!pokemonName || isEmpty(tableRows)) return
@@ -54,24 +65,30 @@ const Form = ({ pokemonTypesOptions, tableRows, handleUpdatePokemonRow }) => {
 
   useEffect(() => {
     if (!selectedPokemon || isEmpty(selectedPokemon)) return
-    const newSprites = []
-    const pokemonSprites = selectedPokemon.sprites
-    for (const sprite in pokemonSprites) {
-      if (!!pokemonSprites[sprite] && typeof pokemonSprites[sprite] === 'string') {
-        newSprites.push({
-          sprite: pokemonSprites[sprite],
-          title: sprite
-        })
-      }
-    }
-    setPokemonSprites(newSprites)
-  }, [selectedPokemon])
+    const sprites = getPokemonSprites()
+    getCatchedPokemons()
+      .then(pokemons => {
+        const savedPokemon = pokemons.find(pok => pok.id === selectedPokemon?.id)
+        if (!isEmpty(savedPokemon)) {
+          updatePokemon(savedPokemon, sprites)
+        }
+      })
+  }, [getPokemonSprites, updatePokemon, selectedPokemon])
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.stopPropagation()
     e.preventDefault()
-    console.log({ pokemonTypesOptions, posibleFriends, tableRows, pokemonSprites, selectedSprite })
-    // handleUpdatePokemonRow({});
+    if (!newName || isEmpty(newTypes) || !selectedSprite) return
+    const newPokemonData = cloneDeep(selectedPokemon)
+    newPokemonData.name = newName
+    newPokemonData.description = newDescription
+    newPokemonData.types = newTypes.map((type, index) => ({ slot: index + 1, type: { name: type } }))
+    newPokemonData.friends = newFriends
+    newPokemonData.sprites.front_default = pokemonSprites.find(sprite => sprite.title === selectedSprite).sprite
+    newPokemonData.sprites.back_default = pokemonSprites.find(sprite => sprite.title === selectedSprite).sprite
+    console.log({ pokemonTypesOptions, posibleFriends, tableRows, pokemonSprites, selectedSprite, newPokemonData })
+    await saveCatchedPokemon(newPokemonData)
+    navigate('/')
   }
 
   const renderTypeTag = (type) => {
@@ -136,7 +153,7 @@ const Form = ({ pokemonTypesOptions, tableRows, handleUpdatePokemonRow }) => {
     />
     <Selector
       label={'Amigos'}
-      data={posibleFriends}
+      data={isEmpty(posibleFriends) ? tableRows : posibleFriends}
       renderListItem={renderTypeListItem}
       value={newFriends}
       multiple
@@ -150,8 +167,7 @@ const Form = ({ pokemonTypesOptions, tableRows, handleUpdatePokemonRow }) => {
       data={pokemonSprites}
     />
 
-    <button onSubmit={onSubmit}>Submit</button>
-    <div onClick={onSubmit}>ABC</div>
+    <button onClick={onSubmit}>Submit</button>
   </form>
   )
 }

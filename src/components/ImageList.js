@@ -7,7 +7,6 @@ import './ImageList.css'
 export const ImageList = ({ value, setValue, data, ...props }) => {
   // const [selected, setSelected] = React.useState(null)
   // setSelected((st) => st + 1)
-  console.log({ value })
   return (
     <div style={{ display: 'flex', justifyContent: 'center' }}>
       <MuiImageList sx={{ width: 300, height: 300 }} cols={3} rowHeight={100}>

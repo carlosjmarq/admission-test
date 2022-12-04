@@ -16,7 +16,7 @@ export const Text = ({ value, setValue, ...props }) => {
         <TextField
           value={value}
           variant="outlined"
-          onChange={setValue}
+          onChange={event => setValue(event.target.value)}
           {...props}
         />
       </div>
