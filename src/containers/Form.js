@@ -6,7 +6,7 @@ import { clone, cloneDeep, intersection, isEmpty } from 'lodash'
 import { Chip, MenuItem } from '@mui/material'
 import { Box } from '@mui/system'
 import { ImageList } from '../components/ImageList'
-import { getCatchedPokemons, saveCatchedPokemon } from '../helpers/catchedPokemon'
+import { useLocalStorage } from '../hooks/useLocalStorage'
 
 // * use spritesTitles to set the titles to Images
 
@@ -23,6 +23,7 @@ const Form = ({ pokemonTypesOptions, tableRows, handleUpdatePokemonRow }) => {
   // * Use navigate to return root path
   const navigate = useNavigate()
   const { pokemonName } = useParams()
+  const { getCatchedPokemons, saveCatchedPokemon } = useLocalStorage()
 
   const getPokemonSprites = useCallback(() => {
     const newSprites = []
@@ -66,27 +67,25 @@ const Form = ({ pokemonTypesOptions, tableRows, handleUpdatePokemonRow }) => {
   useEffect(() => {
     if (!selectedPokemon || isEmpty(selectedPokemon)) return
     const sprites = getPokemonSprites()
-    getCatchedPokemons()
-      .then(pokemons => {
-        const savedPokemon = pokemons.find(pok => pok.id === selectedPokemon?.id)
-        if (!isEmpty(savedPokemon)) {
-          updatePokemon(savedPokemon, sprites)
-        }
-      })
-  }, [getPokemonSprites, updatePokemon, selectedPokemon])
+    const pokemons = getCatchedPokemons()
+    const savedPokemon = pokemons.find(pok => pok.id === selectedPokemon?.id)
+    if (!isEmpty(savedPokemon)) {
+      updatePokemon(savedPokemon, sprites)
+    }
+  }, [getPokemonSprites, updatePokemon, selectedPokemon, getCatchedPokemons])
 
-  const onSubmit = async (e) => {
-    e.stopPropagation()
-    e.preventDefault()
+  const onSubmit = async (event) => {
+    event.preventDefault()
     if (!newName || isEmpty(newTypes) || !selectedSprite) return
-    const newPokemonData = cloneDeep(selectedPokemon)
-    newPokemonData.name = newName
-    newPokemonData.description = newDescription
-    newPokemonData.types = newTypes.map((type, index) => ({ slot: index + 1, type: { name: type } }))
-    newPokemonData.friends = newFriends
+    const newPokemonData = {
+      ...cloneDeep(selectedPokemon),
+      name: newName,
+      description: newDescription,
+      types: newTypes.map((type, index) => ({ slot: index + 1, type: { name: type } })),
+      friends: newFriends
+    }
     newPokemonData.sprites.front_default = pokemonSprites.find(sprite => sprite.title === selectedSprite).sprite
     newPokemonData.sprites.back_default = pokemonSprites.find(sprite => sprite.title === selectedSprite).sprite
-    console.log({ pokemonTypesOptions, posibleFriends, tableRows, pokemonSprites, selectedSprite, newPokemonData })
     await saveCatchedPokemon(newPokemonData)
     navigate('/')
   }
@@ -138,7 +137,7 @@ const Form = ({ pokemonTypesOptions, tableRows, handleUpdatePokemonRow }) => {
         label={'Description'}
         value={newDescription}
         setValue={setNewDescription}
-        multiline={true}
+        multiline
         rows={3}
       />
 

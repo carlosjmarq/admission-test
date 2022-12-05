@@ -50,10 +50,10 @@ export const PokemonRow = ({ row, index, selected, setSelected, handleEditButton
       selected={isItemSelected}
     >
       <TableCell padding="checkbox">
-        <Checkbox color="primary" checked={isItemSelected} />
-        <TableCell padding="checkbox">
+        <Checkbox color="primary" padding="checkbox" checked={isItemSelected} />
+        <div>
           <button onClick={handleEditButton(displayData)}>Edit</button>
-        </TableCell>
+        </div>
       </TableCell>
       <TableCell className="image-cell" align="right">
         <img className="pokemon-front-img" src={displayData.sprites.front_default}/>

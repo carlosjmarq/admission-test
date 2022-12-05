@@ -13,8 +13,9 @@ import { EnhancedTableHead } from './EnhancedTableHead'
 import { EnhancedTableToolbar } from './EnhanncedTableToolbar'
 import { defaultRows, getComparator, stableSort } from './TableHelpers'
 import { PokemonRow } from './PokemonRow'
+import { useLocalStorage } from '../../hooks/useLocalStorage'
 
-export default function EnhancedTable ({ rowsProp, handleEditButton, catchedPokemon }) {
+export default function EnhancedTable ({ rowsProp, handleEditButton }) {
   const [rows] = useState(rowsProp || defaultRows)
   const [order, setOrder] = useState('asc')
   const [orderBy, setOrderBy] = useState('calories')
@@ -22,6 +23,8 @@ export default function EnhancedTable ({ rowsProp, handleEditButton, catchedPoke
   const [page, setPage] = useState(0)
   const [dense, setDense] = useState(false)
   const [rowsPerPage, setRowsPerPage] = useState(5)
+
+  const { catchedPokemon } = useLocalStorage()
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc'
@@ -51,7 +54,7 @@ export default function EnhancedTable ({ rowsProp, handleEditButton, catchedPoke
     setDense(event.target.checked)
   }
 
-  // Avoid a layout jump when reaching the last page with empty rows.
+  // * Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0
 

@@ -14,7 +14,7 @@ const MenuProps = {
   }
 }
 
-export const Selector = ({ data, renderListItem, renderValue, ...props }) => {
+export const Selector = ({ data, renderListItem, ...props }) => {
   return (
     <div>
       <FormControl sx={{ m: 1, width: 300 }} disabled={props.disabled ?? false}>
@@ -22,9 +22,7 @@ export const Selector = ({ data, renderListItem, renderValue, ...props }) => {
         <Select
           labelId={`type-selector-label-${props.label}`}
           id={`type-selector-${props.label}`}
-          // onChange={handleChange}
           variant={'outlined'}
-          renderValue={renderValue}
           MenuProps={MenuProps}
           {...props}
         >
