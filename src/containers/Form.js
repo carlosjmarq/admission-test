@@ -7,6 +7,7 @@ import { Chip, MenuItem } from '@mui/material'
 import { Box } from '@mui/system'
 import { ImageList } from '../components/ImageList'
 import { useLocalStorage } from '../hooks/useLocalStorage'
+import './Form.css'
 
 // * use spritesTitles to set the titles to Images
 
@@ -95,7 +96,7 @@ const Form = ({ pokemonTypesOptions, tableRows, handleUpdatePokemonRow }) => {
     return (
       <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
         {type.map((value) => (
-          <Chip key={value} label={value} color={'secondary'}/>
+          <Chip key={value} label={value} color={'primary'}/>
         ))}
       </Box>
     )
@@ -125,49 +126,53 @@ const Form = ({ pokemonTypesOptions, tableRows, handleUpdatePokemonRow }) => {
   // }
 
   return (
-    <form>
-      <h1>¡Felicidades has atrapado un {selectedPokemon?.name}!</h1>
-      <h3>Cuentanos mas sobre tu nuevo pokemon</h3>
-      <Text
-        label={'Nombre'}
-        value={newName}
-        setValue={setNewName}
-      />
-      <Text
-        label={'Description'}
-        value={newDescription}
-        setValue={setNewDescription}
-        multiline
-        rows={3}
-      />
-
-    <Selector
-      label={'Tipo'}
-      data={pokemonTypesOptions}
-      renderListItem={renderTypeListItem}
-      renderValue={renderTypeTag}
-      value={newTypes}
-      multiple
-      onChange={event => handleMultipleSelector(event, setNewTypes)}
-    />
-    <Selector
-      label={'Amigos'}
-      data={isEmpty(posibleFriends) ? tableRows : posibleFriends}
-      renderListItem={renderTypeListItem}
-      value={newFriends}
-      multiple
-      onChange={event => handleMultipleSelector(event, setNewFriends)}
-      disabled={isEmpty(posibleFriends)}
-    />
-
-    <ImageList
-      value={selectedSprite}
-      setValue={setSelectedSprite}
-      data={pokemonSprites}
-    />
-
-    <button onClick={onSubmit}>Submit</button>
-  </form>
+    <form className='form-container'>
+      <div>
+        <h1>¡Felicidades has atrapado un {selectedPokemon?.name}!</h1>
+        <h3>Cuentanos mas sobre tu nuevo pokemon</h3>
+      </div>
+      <div className='form-data-row'>
+        <div className='form-column'>
+          <Text
+            label={'Nombre'}
+            value={newName}
+            setValue={setNewName}
+          />
+          <Text
+            label={'Description'}
+            value={newDescription}
+            setValue={setNewDescription}
+            multiline
+            rows={3}
+          />
+          <Selector
+            label={'Tipo'}
+            data={pokemonTypesOptions}
+            renderListItem={renderTypeListItem}
+            renderValue={renderTypeTag}
+            value={newTypes}
+            multiple
+            onChange={event => handleMultipleSelector(event, setNewTypes)}
+          />
+          <Selector
+            label={'Amigos'}
+            data={isEmpty(posibleFriends) ? tableRows : posibleFriends}
+            renderListItem={renderTypeListItem}
+            renderValue={renderTypeTag}
+            value={newFriends}
+            multiple
+            onChange={event => handleMultipleSelector(event, setNewFriends)}
+            disabled={isEmpty(posibleFriends)}
+          />
+        </div>
+        <ImageList
+          value={selectedSprite}
+          setValue={setSelectedSprite}
+          data={pokemonSprites}
+        />
+      </div>
+      <button onClick={onSubmit} className={'primary-button'}>Registrar</button>
+    </form>
   )
 }
 

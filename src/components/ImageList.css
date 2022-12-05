@@ -9,3 +9,9 @@
 .selectedSprite {
   border: 3px solid #1565c0
 }
+.image-list-container {
+  display: flex;
+  justify-content: center;
+  border: 1px solid gray;
+  border-radius: 1rem;
+}

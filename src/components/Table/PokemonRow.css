@@ -1,5 +1,5 @@
 .pokemon-front-img {
-  display: inline;
+  display: block;
 }
 
 .pokemon-back-img {
@@ -11,6 +11,42 @@
 }
 
 .image-cell:hover .pokemon-back-img {
-  display: inline;
+  display: block;
 }
 
+.image-cell {
+  width: 5rem;
+}
+
+.checkbox-cell {
+  margin: 0px 0px 0px 0px;
+  padding: 0px 0px 0px 0px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+}
+
+ul {
+  list-style-type: none;
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  justify-items: center;
+  margin: 0px 0px 0px 0px;
+  padding: 0rem 0.5rem 0rem 0.5rem;
+}
+
+.tags {
+  background-color: #1565c0;
+  color: white;
+  text-align: center;
+  margin: 0.5rem 0rem 0.5rem 0rem;
+  border-radius: 2rem;
+}
+
+li:hover {
+  background-color: #bbdefb;
+  color: black;
+}

@@ -9,8 +9,8 @@ export const ImageList = ({ value, setValue, data, ...props }) => {
   // const [selected, setSelected] = React.useState(null)
   // setSelected((st) => st + 1)
   return (
-    <div style={{ display: 'flex', justifyContent: 'center' }}>
-      <MuiImageList sx={{ width: 300, height: 300 }} cols={3} rowHeight={100}>
+    <div className='image-list-container'>
+      <MuiImageList sx={{ width: 300, height: 300, paddingX: 4, paddingY: 2, overflow: 'hidden' }} cols={3} rowHeight={100}>
           {!!data &&
             data.map((item) => (
               <div key={item.title} className={`sprite ${value === item.title ? 'selectedSprite' : ''}`}>

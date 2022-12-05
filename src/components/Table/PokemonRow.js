@@ -49,17 +49,21 @@ export const PokemonRow = ({ row, index, selected, setSelected, handleEditButton
       key={displayData.name}
       selected={isItemSelected}
     >
-      <TableCell padding="checkbox">
-        <Checkbox color="primary" padding="checkbox" checked={isItemSelected} />
+      <TableCell padding="checkbox" className='checkbox-cell'>
+        <Checkbox color="primary" checked={isItemSelected} />
         <div>
-          <button onClick={handleEditButton(displayData)}>Edit</button>
+          <button onClick={handleEditButton(displayData)} className={'primary-button'}>
+            Capturar
+          </button>
         </div>
       </TableCell>
-      <TableCell className="image-cell" align="right">
+      <TableCell className="image-cell" >
         <img className="pokemon-front-img" src={displayData.sprites.front_default}/>
         <img className="pokemon-back-img" src={displayData.sprites.back_default}/>
       </TableCell>
-      <TableCell align="right">{displayData.id}</TableCell>
+      <TableCell>
+        {displayData.id}
+      </TableCell>
       <TableCell
         // component="th"
         id={labelId}
@@ -68,23 +72,23 @@ export const PokemonRow = ({ row, index, selected, setSelected, handleEditButton
       >
         {displayData.name}
       </TableCell>
-      <TableCell align="right">
+      <TableCell>
         <ul>
           {!!displayData.types && displayData.types.map(({ type }) => (
-            <li key={type.name}>{type.name}</li>
+            <li key={type.name} className={'tags'}>{type.name}</li>
           ))}
         </ul>
       </TableCell>
       <TableCell>
         <ul>
           {!!displayData.friends && displayData.friends.map(friend => (
-            <li key={friend}>{friend}</li>
+            <li key={friend} className={'tags'}>{friend}</li>
           ))}
         </ul>
       </TableCell>
-      <TableCell align="right">{displayData.height}</TableCell>
-      <TableCell align="right">{displayData.weight}</TableCell>
-      <TableCell align="right">{displayData?.description}</TableCell>
+      <TableCell>{displayData.height}</TableCell>
+      <TableCell>{displayData.weight}</TableCell>
+      <TableCell>{displayData?.description}</TableCell>
     </TableRow>
   )
 }

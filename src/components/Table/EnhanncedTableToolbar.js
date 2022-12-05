@@ -33,17 +33,17 @@ export const EnhancedTableToolbar = (props) => {
           variant="subtitle1"
           component="div"
         >
-          {numSelected} selected
+          {numSelected} seleccionados
         </Typography>
           )
         : (
         <Typography
           sx={{ flex: '1 1 100%' }}
-          variant="h6"
+          variant="h3"
           id="tableTitle"
           component="div"
         >
-          POKEMONS
+          TUS POKEMONS
         </Typography>
           )}
 
