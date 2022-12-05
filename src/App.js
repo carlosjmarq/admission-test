@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import Routes from './Routes'
 import './App.css'
-import { Outlet } from 'react-router-dom'
 import axios from 'axios'
-import { getCatchedPokemons } from './helpers/catchedPokemon'
 
 const App = () => {
   const [tableRows, setTableRows] = useState([])
   const [pokemonTypesOptions, setPokemonTypesOptions] = useState([])
-  const [catchedPokemon, setCatchedPokemon] = useState([])
+  const [progress, setProgress] = useState(0)
+  console.log({ progress })
 
   const getPokemon = async ({ url }) => {
     const { data: { types, weight, height, id, name, sprites } } = await axios.get(url)
@@ -24,38 +23,27 @@ const App = () => {
           const pokemon = await getPokemon(pokemonData)
           console.log('consulting...')
           pokemons.push(pokemon)
+          setProgress(pokemons.length / results.length * 100)
         }
         setTableRows(pokemons)
       })
   }, [])
 
-  useEffect(() => {
-    getCatchedPokemons()
-      .then(setCatchedPokemon)
-  }, [])
-
   // * Consulta de los tipos de pokemon
   useEffect(() => {
     axios.get('https://pokeapi.co/api/v2/type/')
-      .then(async ({ data: { results } }) => {
+      .then(({ data: { results } }) => {
         setPokemonTypesOptions(results)
       })
   }, [])
-
-  const handleUpdatePokemonRow = ({ idPokemon, fields }) => {
-    // const { my_name, my_description, my_types, my_teammates, my_sprite } =
-    //   fields;
-  }
 
   return (
     <div className="App">
       <Routes
         tableRows={tableRows}
         pokemonTypesOptions={pokemonTypesOptions}
-        handleUpdatePokemonRow={handleUpdatePokemonRow}
-        catchedPokemon={catchedPokemon}
+        progress={progress}
       />
-      <Outlet />
     </div>
   )
 }

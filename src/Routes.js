@@ -4,7 +4,7 @@ import Home from './containers/Home'
 import Form from './containers/Form'
 import { Route, Routes } from 'react-router-dom'
 
-const MyRoutes = ({ tableRows, pokemonTypesOptions, handleUpdatePokemonRow, catchedPokemon }) => {
+const MyRoutes = ({ tableRows, pokemonTypesOptions, handleUpdatePokemonRow, progress }) => {
   return (
     <div>
       <Routes>
@@ -12,7 +12,7 @@ const MyRoutes = ({ tableRows, pokemonTypesOptions, handleUpdatePokemonRow, catc
           <Route
             index
             path="/"
-            element={<Home tableRows={tableRows} catchedPokemon={catchedPokemon}/>}
+            element={<Home tableRows={tableRows} progress={progress}/>}
           />
           <Route
             path="form/:pokemonName"
@@ -24,7 +24,7 @@ const MyRoutes = ({ tableRows, pokemonTypesOptions, handleUpdatePokemonRow, catc
               />
             }
           />
-          <Route index path="*" element={<Home tableRows={tableRows} />} />
+          <Route index path="*" element={<>oh no! 404</>} />
         </Route>
       </Routes>
     </div>
